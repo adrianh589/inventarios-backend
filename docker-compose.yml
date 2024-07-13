@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 6259
+      MYSQL_USER: adrian
+      MYSQL_PASSWORD: 6259
+      MYSQL_DATABASE: productos
+    volumes:
+      - ./init/productosdb.sql:/docker-entrypoint-initdb.d/mysql-init.sql
+    networks:
+      - mynetwork
+
+  mongo:
+    image: mongo:latest
+    container_name: my_mongo_container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: adrian
+      MONGO_INITDB_ROOT_PASSWORD: 6259
+    volumes:
+      - ./init/inventarios.js:/docker-entrypoint-initdb.d/inventarios.js:ro
+    ports:
+      - "27017:27017"
+    networks:
+      - mynetwork
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - docker.env
+    depends_on:
+      - mysql
+      - mongo
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
