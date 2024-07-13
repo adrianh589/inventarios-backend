@@ -48,7 +48,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: java-app
-          github-token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Login to Azure
         uses: azure/login@v1
@@ -63,4 +62,4 @@ jobs:
         with:
           app-name: 'inventariosstef'
           slot-name: 'Production'
-          package: '*.war'
+          package: 'downloaded/*.war'
